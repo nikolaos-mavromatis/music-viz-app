@@ -1,29 +1,28 @@
 //displays and handles clicks on the playback button.
 function PlaybackButton() {
 
-  this.x = 20;
-  this.y = 20;
-  this.width = 20;
-  this.height = 20;
+  this.x = 40;
+  this.y = 40;
+  this.width = 30;
+  this.height = 30;
 
   //flag to determine whether to play or pause after button click and
   //to determine which icon to draw
   this.playing = false;
 
   this.draw = function () {
+    this.buttonFrame();
     if (this.playing) {
-      rect(this.x, this.y, this.width / 2 - 2, this.height);
-      rect(this.x + (this.width / 2 + 2), this.y, this.width / 2 - 2, this.height);
+      this.pauseButton();
     } else {
-      triangle(this.x, this.y, this.x + this.width, this.y + this.height / 2, this.x, this.y + this.height);
-
+      this.playButton();
     }
   };
 
   //checks for clicks on the button, starts or pauses playabck.
   //@returns true if clicked false otherwise.
   this.hitCheck = function () {
-    if (mouseX > this.x && mouseX < this.x + this.width && mouseY > this.y && mouseY < this.y + this.height) {
+    if (dist(mouseX, mouseY, this.x, this.y) < this.width) {
       if (sound.isPlaying()) {
         sound.pause();
       } else {
@@ -35,4 +34,24 @@ function PlaybackButton() {
     return false;
   };
 
+  this.buttonFrame = function () {
+    fill('#07f770');
+    noStroke();
+    ellipse(this.x, this.y, 2 * this.width, 2 * this.width);
+  }
+
+  this.playButton = function () {
+    fill('#FFFFFF');
+    triangle(
+      this.x - this.width / 3, this.y - this.height / 2, // top left
+      this.x + this.width / 2, this.y, // right
+      this.x - this.width / 3, this.y + this.height / 2, // bottom left
+    );
+  }
+
+  this.pauseButton = function () {
+    fill('#FFFFFF');
+    rect(this.x - this.width / 2, this.y - this.height / 2, this.width / 2 - 2, this.height);
+    rect(this.x + 2, this.y - this.height / 2, this.width / 2 - 2, this.height);
+  }
 }
