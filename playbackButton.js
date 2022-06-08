@@ -25,8 +25,10 @@ function PlaybackButton() {
     if (dist(mouseX, mouseY, this.x, this.y) < this.width) {
       if (sound.isPlaying()) {
         sound.pause();
+        noLoop();
       } else {
         sound.loop();
+        loop();
       }
       this.playing = !this.playing;
       return true;
@@ -35,7 +37,7 @@ function PlaybackButton() {
   };
 
   this.buttonFrame = function () {
-    fill('#07f770');
+    fill('#24f17e');
     noStroke();
     ellipse(this.x, this.y, 2 * this.width, 2 * this.width);
   }
