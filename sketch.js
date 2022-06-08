@@ -9,7 +9,8 @@ var fourier;
 
 function preload() {
   // sound = loadSound('assets/stomper_reggae_bit.mp3');
-  sound = loadSound('assets/rockstar-trailer-109945.mp3');
+  // sound = loadSound('assets/rockstar-trailer-109945.mp3');
+  sound = loadSound('assets/jazzy-abstract-beat-11254.mp3');
 }
 
 function setup() {
