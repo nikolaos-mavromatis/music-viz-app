@@ -7,9 +7,9 @@ class DurationSlider {
    * and the progress in playback time.
    */
   constructor() {
-    this.x = 80;
+    this.x = 20;
     this.y = height - 20;
-    this.w = width - 2 * this.x;
+    this.w = width - 7 * this.x;
     this.h = 6;
   }
 

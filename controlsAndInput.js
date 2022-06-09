@@ -24,6 +24,8 @@ function ControlsAndInput() {
     -1
   );
 
+  this.timer = new TimeDisplay();
+
   //make the window fullscreen or revert to windowed
   this.mousePressed = function () {
     if (
@@ -54,26 +56,31 @@ function ControlsAndInput() {
   //draws the playback button and potentially the menu
   this.draw = function () {
     push();
-    fill("white");
-    stroke("black");
-    strokeWeight(2);
-    textSize(34);
-
     //playback button
     this.playbackButton.draw();
 
+    //jump buttons
     this.jumpForwardButton.draw();
     this.jumpBackwardButton.draw();
 
+    //playback bar
+    this.playbackBar.draw(sound.currentTime(), sound.duration());
+
+    //display time
+    this.timer.draw(sound.currentTime(), sound.duration());
+
     //only draw the menu if menu displayed is set to true.
     if (this.menuDisplayed) {
-
+      fill("white");
+      stroke("black");
+      strokeWeight(2);
+      textSize(34);
+      textAlign(LEFT, TOP);
       text("Select a visualisation:", 100, 30);
       this.menu();
     }
     pop();
 
-    this.playbackBar.draw(sound.currentTime(), sound.duration());
   };
 
   this.menu = function () {
