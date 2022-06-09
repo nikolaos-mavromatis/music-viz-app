@@ -7,6 +7,9 @@ function ControlsAndInput() {
   //playback button displayed in the top left of the screen
   this.playbackButton = new PlaybackButton();
 
+  //bar displaying the current time playing on the track  
+  this.playbackBar = new DurationSlider();
+
   //make the window fullscreen or revert to windowed
   this.mousePressed = function () {
     if (!this.playbackButton.hitCheck()) {
@@ -47,6 +50,7 @@ function ControlsAndInput() {
     }
     pop();
 
+    this.playbackBar.draw(sound.currentTime(), sound.duration());
   };
 
   this.menu = function () {
