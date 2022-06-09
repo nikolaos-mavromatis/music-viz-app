@@ -1,8 +1,9 @@
+// FIXME: when moving to fullscreen the position should be lower
+
 //displays and handles clicks on the playback button.
 function PlaybackButton() {
-
-  this.x = 40;
-  this.y = 40;
+  this.x = width / 2;
+  this.y = height - 80;
   this.width = 30;
   this.height = 30;
 
