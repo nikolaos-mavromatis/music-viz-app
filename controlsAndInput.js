@@ -10,9 +10,28 @@ function ControlsAndInput() {
   //bar displaying the current time playing on the track  
   this.playbackBar = new DurationSlider();
 
+  // jump buttons
+  this.jumpForwardButton = new JumpButton(
+    width / 2 + 100,
+    this.playbackButton.y,
+    0.8 * this.playbackButton.r,
+    1
+  );
+  this.jumpBackwardButton = new JumpButton(
+    width / 2 - 100,
+    this.playbackButton.y,
+    0.8 * this.playbackButton.r,
+    -1
+  );
+
   //make the window fullscreen or revert to windowed
   this.mousePressed = function () {
-    if (!this.playbackButton.hitCheck()) {
+    if (
+      // TODO: consolidate in one controls hit check
+      !this.playbackButton.hitCheck() &&
+      !this.jumpForwardButton.hitCheck() &&
+      !this.jumpBackwardButton.hitCheck()
+    ) {
       var fs = fullscreen();
       fullscreen(!fs);
     }
@@ -42,6 +61,10 @@ function ControlsAndInput() {
 
     //playback button
     this.playbackButton.draw();
+
+    this.jumpForwardButton.draw();
+    this.jumpBackwardButton.draw();
+
     //only draw the menu if menu displayed is set to true.
     if (this.menuDisplayed) {
 
