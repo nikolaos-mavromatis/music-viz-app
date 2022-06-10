@@ -13,5 +13,11 @@ function setup() {
 }
 
 function draw() {
+  background('white');
   p.draw();
+}
+
+function mousePressed() {
+  // for debug purposes
+  p.waves.push(new Wave());
 }
