@@ -14,6 +14,4 @@ function setup() {
 
 function draw() {
   p.draw();
-
-  rect(25 + x, height / 2 - 25, 50, 50);
 }
