@@ -23,15 +23,14 @@ class Prism {
 
     for (var i = this.waves.length - 1; i >= 0; i--) {
       var wave = this.waves[i];
-      wave.update();
-      wave.draw();
 
-      //   // traverse backwards the waves array to delete wave if necessary
-      //   if (!wave.isOffScreen) { // flag showing wave's radius is larger than half the 
-      //     wave.draw();
-      //   } else {
-      //     this.waves.splice(i, 1);
-      //   }
+      // traverse backwards the waves array to delete wave if necessary
+      if (!wave.isOffScreen()) { // flag showing wave's radius is larger than half the 
+        wave.draw();
+        wave.update();
+      } else {
+        this.waves.splice(i, 1);
+      }
     }
     this.#drawTriangle();
   }
