@@ -13,6 +13,7 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  angleMode(DEGREES);
   background(0);
   controls = new ControlsAndInput();
 
