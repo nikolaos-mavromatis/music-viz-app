@@ -1,6 +1,7 @@
 var img;
 var imgAngle;
 var freq;
+var spectrum;
 
 
 class Atom {
@@ -12,12 +13,27 @@ class Atom {
   }
 
   draw() {
-    fourier.analyze();
+    spectrum = fourier.analyze();
 
     freq = fourier.getEnergy(400, 8000);
 
     push();
     translate(width / 2, height / 2);
+
+    // vertical bars
+    noStroke();
+    fill(251, 164, 198, 255);
+    let spacing = 0;
+    let barW = (width / 2) / spectrum.length;
+    for (var dir = -1; dir <= 1; dir += 2) {
+      for (var i = 0; i < spectrum.length; i++) {
+        let barH = map(spectrum[i], 0, 255, 0, 400);
+        let barX = dir * i * (barW + spacing);
+        barX -= barW / 2;
+        barX += -dir * width / 2;
+        rect(barX, -barH / 2, barW, barH, 10);
+      }
+    }
 
     // centerpiece
     let v = map(freq, 0, 255, 0, 80);

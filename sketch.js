@@ -18,7 +18,7 @@ function setup() {
   controls = new ControlsAndInput();
 
   //instantiate the fft object
-  fourier = new p5.FFT();
+  fourier = new p5.FFT(0.9, 256);
 
   //create a new visualisation container and add visualisations
   vis = new Visualisations();
