@@ -25,7 +25,7 @@ class Atom {
 
     spectrum = fourier.analyze();
 
-    amp = fourier.getEnergy(2000, 10000);
+    amp = fourier.getEnergy(2000, 8000);
 
     spectralCentroid = fourier.getCentroid();
 
@@ -35,10 +35,9 @@ class Atom {
     translate(this.origin.x, this.origin.y);
 
     blastTriggered = fourier.getEnergy(0.9 * spectralCentroid, 1.5 * spectralCentroid) > 110; //alternative trigger
-    blastTriggered = fourier.getEnergy("highMid") > 160;
+    blastTriggered = fourier.getEnergy("highMid") > 150;
     if (blastTriggered) {
-      this.shakeVis();
-      this.particles.push(new Particle(map(random(), 0, 1, 1, 5), this.d));
+      this.blast();
     }
 
     for (var i = this.particles.length - 1; i >= 0; i--) {
@@ -67,10 +66,12 @@ class Atom {
       }
     }
 
-    noStroke();
+    // "reflective" surface
+    noStroke()
     fill(0, 150);
     rect(0, height / 4, width, height / 2);
 
+    // bar separator
     stroke(0);
     strokeWeight(1);
     line(-width / 2, 0, width / 2, 0);
@@ -90,8 +91,9 @@ class Atom {
     pop();
   }
 
-  shakeVis() {
+  blast() {
     rotate(random(-2, 2));
+    this.particles.push(new Particle(map(random(), 0, 1, 1, 5), this.d));
   }
 }
 
