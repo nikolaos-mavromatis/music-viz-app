@@ -22,8 +22,8 @@ class Atom {
     freq = fourier.getEnergy(400, 2000);
 
     spectralCentroid = fourier.getCentroid();
-    blastTriggered = fourier.getEnergy(0.9 * spectralCentroid, 1.5 * spectralCentroid) > 120;
-    // console.log(spectralCentroid);
+    blastTriggered = fourier.getEnergy(0.9 * spectralCentroid, 1.5 * spectralCentroid) > 110; //alternative
+    blastTriggered = fourier.getEnergy("mid") > 170;
 
     push();
     translate(width / 2, height / 2);
@@ -32,13 +32,14 @@ class Atom {
       this.particles.push(new Particle(map(random(), 0, 1, 1, 5), 50));
     }
 
-    translate(0, 0);
-    rotate(0);
     for (var i = this.particles.length - 1; i >= 0; i--) {
       let p = this.particles[i];
       if (!p.isOffScreen()) {
         p.update(blastTriggered);
         p.draw();
+      }
+      else {
+        this.particles.splice(i, 1);
       }
     }
 
@@ -64,9 +65,9 @@ class Atom {
     ellipse(0, 0, 100 + v, 100 + v);
 
     // centrepiece logo rotation
-    // rotate(imgAngle);
-    // image(img, -35, -35, 70, 70);
-    // imgAngle = (imgAngle - 1) % 359;
+    rotate(imgAngle);
+    image(img, -35, -35, 70, 70);
+    imgAngle = (imgAngle - 1) % 359;
 
     pop();
   }
@@ -93,7 +94,7 @@ class Particle {
   }
 
   isOffScreen() {
-    if (dist(this.pos.x, this.pos.y, 0, 0) > 500) {
+    if (dist(this.pos.x, this.pos.y, 0, 0) > 1500) {
       return true;
     }
 
@@ -104,11 +105,11 @@ class Particle {
     this.vel.add(this.acc);
     this.pos = this.pos.add(this.vel);
 
-    if (cond && random() > 0.5) {
-      this.pos = this.pos.add(this.vel);
-      this.pos = this.pos.add(this.vel);
-      this.pos = this.pos.add(this.vel);
-      this.pos = this.pos.add(this.vel);
+    if (cond) {
+      let n = 4; // accelerate n times
+      for (var i = 0; i < 4; i++) {
+        this.pos = this.pos.add(this.vel);
+      }
     }
   }
 }
