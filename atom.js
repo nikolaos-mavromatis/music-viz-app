@@ -12,6 +12,8 @@ class Atom {
 
     img = loadImage('assets/atoms-png-transparent-atoms-images-515983.png');
     imgAngle = 0;
+
+    this.particles = [];
   }
 
   draw() {
@@ -20,11 +22,25 @@ class Atom {
     freq = fourier.getEnergy(400, 2000);
 
     spectralCentroid = fourier.getCentroid();
-    blastTriggered = fourier.getEnergy(0.9 * spectralCentroid, 1.5 * spectralCentroid) > 130;
+    blastTriggered = fourier.getEnergy(0.9 * spectralCentroid, 1.5 * spectralCentroid) > 120;
     // console.log(spectralCentroid);
 
     push();
     translate(width / 2, height / 2);
+
+    if (blastTriggered) {
+      this.particles.push(new Particle(map(random(), 0, 1, 1, 5), 50));
+    }
+
+    translate(0, 0);
+    rotate(0);
+    for (var i = this.particles.length - 1; i >= 0; i--) {
+      let p = this.particles[i];
+      if (!p.isOffScreen()) {
+        p.update(blastTriggered);
+        p.draw();
+      }
+    }
 
     // vertical bars
     noStroke();
@@ -48,18 +64,51 @@ class Atom {
     ellipse(0, 0, 100 + v, 100 + v);
 
     // centrepiece logo rotation
-    rotate(imgAngle);
-    image(img, -35, -35, 70, 70);
-    imgAngle = (imgAngle - 1) % 359;
+    // rotate(imgAngle);
+    // image(img, -35, -35, 70, 70);
+    // imgAngle = (imgAngle - 1) % 359;
 
     pop();
+  }
+}
 
-    if (blastTriggered) {
-      this.explode();
-    }
+
+class Particle {
+  constructor(size, radius) {
+    let angle = random() * 360;
+
+    // this.pos = p5.Vector.random2D().mult(150);
+    this.pos = createVector(cos(angle), sin(angle)).mult(radius);
+
+    this.size = size;
+    this.vel = createVector(0, 0);
+    this.acc = this.pos.copy().mult(random(0.0001, 0.00005));
   }
 
-  explode() {
-    background(255);
+  draw() {
+    stroke('white');
+    strokeWeight(this.size);
+    noFill();
+    point(this.pos.x, this.pos.y);
+  }
+
+  isOffScreen() {
+    if (dist(this.pos.x, this.pos.y, 0, 0) > 500) {
+      return true;
+    }
+
+    return false;
+  }
+
+  update(cond) {
+    this.vel.add(this.acc);
+    this.pos = this.pos.add(this.vel);
+
+    if (cond && random() > 0.5) {
+      this.pos = this.pos.add(this.vel);
+      this.pos = this.pos.add(this.vel);
+      this.pos = this.pos.add(this.vel);
+      this.pos = this.pos.add(this.vel);
+    }
   }
 }
