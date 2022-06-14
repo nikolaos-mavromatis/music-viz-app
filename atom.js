@@ -2,6 +2,8 @@ var img;
 var imgAngle;
 var freq;
 var spectrum;
+var spectralCentroid;
+var blastTriggered;
 
 
 class Atom {
@@ -15,7 +17,11 @@ class Atom {
   draw() {
     spectrum = fourier.analyze();
 
-    freq = fourier.getEnergy(400, 8000);
+    freq = fourier.getEnergy(400, 2000);
+
+    spectralCentroid = fourier.getCentroid();
+    blastTriggered = fourier.getEnergy(0.9 * spectralCentroid, 1.5 * spectralCentroid) > 130;
+    // console.log(spectralCentroid);
 
     push();
     translate(width / 2, height / 2);
@@ -47,5 +53,13 @@ class Atom {
     imgAngle = (imgAngle - 1) % 359;
 
     pop();
+
+    if (blastTriggered) {
+      this.explode();
+    }
+  }
+
+  explode() {
+    background(255);
   }
 }
