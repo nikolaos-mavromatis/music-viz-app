@@ -26,6 +26,8 @@ function Needles() {
 
   // draw the plots to the screen
   this.draw = function () {
+    angleMode(RADIANS);
+
     //create an array amplitude values from the fft.
     var spectrum = fourier.analyze();
     //iterator for selecting frequency bin.

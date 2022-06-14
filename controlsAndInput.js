@@ -55,6 +55,8 @@ function ControlsAndInput() {
 
   //draws the playback button and potentially the menu
   this.draw = function () {
+    angleMode(RADIANS);
+
     push();
     //playback button
     this.playbackButton.draw();

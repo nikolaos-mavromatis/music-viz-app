@@ -13,12 +13,11 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  angleMode(DEGREES);
   background(0);
   controls = new ControlsAndInput();
 
   //instantiate the fft object
-  fourier = new p5.FFT(0.9, 256);
+  fourier = new p5.FFT(0.9, 64);
 
   //create a new visualisation container and add visualisations
   vis = new Visualisations();
