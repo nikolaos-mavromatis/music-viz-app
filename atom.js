@@ -38,7 +38,7 @@ class Atom {
     blastTriggered = fourier.getEnergy("highMid") > 160;
     if (blastTriggered) {
       this.shakeVis();
-      this.particles.push(new Particle(map(random(), 0, 1, 1, 5), this.r));
+      this.particles.push(new Particle(map(random(), 0, 1, 1, 5), this.d));
     }
 
     for (var i = this.particles.length - 1; i >= 0; i--) {
