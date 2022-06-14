@@ -1,9 +1,10 @@
 var img;
 var imgAngle;
-var freq;
+var amp;
 var spectrum;
 var spectralCentroid;
 var blastTriggered;
+var blastRotation;
 
 
 class Atom {
@@ -12,24 +13,32 @@ class Atom {
 
     img = loadImage('assets/atoms-png-transparent-atoms-images-515983.png');
     imgAngle = 0;
+    blastRotation = 0;
 
+    this.origin = createVector(width / 2, height / 2);
+    this.d = 100;
+    this.r = this.d / 2;
     this.particles = [];
   }
 
   draw() {
+
     spectrum = fourier.analyze();
 
-    freq = fourier.getEnergy(400, 2000);
+    amp = fourier.getEnergy(2000, 10000);
 
     spectralCentroid = fourier.getCentroid();
-    blastTriggered = fourier.getEnergy(0.9 * spectralCentroid, 1.5 * spectralCentroid) > 110; //alternative
-    blastTriggered = fourier.getEnergy("mid") > 170;
 
     push();
-    translate(width / 2, height / 2);
+    angleMode(DEGREES);
+    rectMode(CENTER);
+    translate(this.origin.x, this.origin.y);
 
+    blastTriggered = fourier.getEnergy(0.9 * spectralCentroid, 1.5 * spectralCentroid) > 110; //alternative trigger
+    blastTriggered = fourier.getEnergy("highMid") > 160;
     if (blastTriggered) {
-      this.particles.push(new Particle(map(random(), 0, 1, 1, 5), 50));
+      this.shakeVis();
+      this.particles.push(new Particle(map(random(), 0, 1, 1, 5), this.r));
     }
 
     for (var i = this.particles.length - 1; i >= 0; i--) {
@@ -46,30 +55,43 @@ class Atom {
     // vertical bars
     noStroke();
     fill(251, 164, 198, 255);
-    let spacing = 0;
-    let barW = (width / 2) / spectrum.length;
+    let spacing = 1;
+    let barW = this.origin.x / spectrum.length;
     for (var dir = -1; dir <= 1; dir += 2) {
       for (var i = 0; i < spectrum.length; i++) {
-        let barH = map(spectrum[i], 0, 255, 0, 400);
+        let barH = map(spectrum[i], 0, 255, 0, 500);
         let barX = dir * i * (barW + spacing);
         barX -= barW / 2;
-        barX += -dir * width / 2;
-        rect(barX, -barH / 2, barW, barH, 10);
+        barX += -dir * this.origin.x;
+        rect(barX, 0, barW, barH, 10);
       }
     }
 
+    noStroke();
+    fill(0, 150);
+    rect(0, height / 4, width, height / 2);
+
+    stroke(0);
+    strokeWeight(1);
+    line(-width / 2, 0, width / 2, 0);
+
     // centerpiece
-    let v = map(freq, 0, 255, 0, 80);
+    let v = map(amp, 0, 255, 0, 80);
     noStroke();
     fill(255);
-    ellipse(0, 0, 100 + v, 100 + v);
+    ellipse(0, 0, this.d + v);
 
     // centrepiece logo rotation
     rotate(imgAngle);
-    image(img, -35, -35, 70, 70);
+    let imgSize = 70;
+    image(img, -imgSize / 2, -imgSize / 2, imgSize, imgSize);
     imgAngle = (imgAngle - 1) % 359;
 
     pop();
+  }
+
+  shakeVis() {
+    rotate(random(-2, 2));
   }
 }
 
@@ -78,16 +100,20 @@ class Particle {
   constructor(size, radius) {
     let angle = random() * 360;
 
-    // this.pos = p5.Vector.random2D().mult(150);
     this.pos = createVector(cos(angle), sin(angle)).mult(radius);
 
     this.size = size;
     this.vel = createVector(0, 0);
     this.acc = this.pos.copy().mult(random(0.0001, 0.00005));
+
+    let r = random(255);
+    let g = random(100, 200);
+    let b = random(100);
+    this.color = color(r, g, b);
   }
 
   draw() {
-    stroke('white');
+    stroke(this.color);
     strokeWeight(this.size);
     noFill();
     point(this.pos.x, this.pos.y);
