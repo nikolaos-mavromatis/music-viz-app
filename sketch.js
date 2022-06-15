@@ -21,6 +21,7 @@ function setup() {
 
   //create a new visualisation container and add visualisations
   vis = new Visualisations();
+  vis.add(new Radar());
   vis.add(new Atom());
   vis.add(new Spectrum());
   vis.add(new WavePattern());
