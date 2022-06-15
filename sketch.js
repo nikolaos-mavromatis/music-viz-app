@@ -8,9 +8,7 @@ var sound = null;
 var fourier;
 
 function preload() {
-  // sound = loadSound('assets/stomper_reggae_bit.mp3');
-  // sound = loadSound('assets/rockstar-trailer-109945.mp3');
-  sound = loadSound('assets/jazzy-abstract-beat-11254.mp3');
+  sound = loadSound('assets/dreamy-beat-dream-11323.mp3');
 }
 
 function setup() {
@@ -19,10 +17,11 @@ function setup() {
   controls = new ControlsAndInput();
 
   //instantiate the fft object
-  fourier = new p5.FFT();
+  fourier = new p5.FFT(0.9, 64);
 
   //create a new visualisation container and add visualisations
   vis = new Visualisations();
+  vis.add(new Atom());
   vis.add(new Spectrum());
   vis.add(new WavePattern());
   vis.add(new Needles());
