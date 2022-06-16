@@ -20,10 +20,12 @@ class Radar {
     this.name = 'radar';
 
     this.pos = createVector(width / 2, height / 2);
-    this.dia = 700;
+    this.dia = 900;
+    this.radius = this.dia / 2;
 
-    this.beam = new Beam(this.dia / 2);
-    this.objects = [new SuspiciousObject(this.dia / 2, this.beam.angle, 10)];
+    this.grid = new Grid(this.radius);
+    this.beam = new Beam(this.radius);
+    this.objects = [new SuspiciousObject(this.radius, this.beam.angle, 10)];
   }
 
   draw() {
@@ -31,26 +33,9 @@ class Radar {
     rectMode(CENTER);
     angleMode(DEGREES);
     translate(width / 2, height / 2);
+    var origin = createVector(0, 0);
 
-    // grid
-    let tickStep = 50;
-    let n = this.dia / tickStep;
-    for (var i = 0; i <= n; i++) {
-      if (i * tickStep % 100 == 0) {
-        stroke(255, 50);
-        strokeWeight(1);
-        noFill();
-        ellipse(0, 0, i * tickStep);
-        noStroke();
-        fill(255, 150);
-        rect(i * tickStep - this.dia / 2, 0, 1, 3);
-        rect(0, i * tickStep - this.dia / 2, 3, 1);
-      }
-      else {
-        rect(i * tickStep - this.dia / 2, 0, 1, 10);
-        rect(0, i * tickStep - this.dia / 2, 10, 1);
-      }
-    }
+    this.grid.show(origin);
 
     // draw objects
     for (var i = this.objects.length - 1; i >= 0; i--) {
@@ -69,6 +54,41 @@ class Radar {
      * Scans the area covered by the radar for objects.
      */
     // placeholder
+  }
+}
+
+class Grid {
+  /**
+   * Draws a grid of concentric circles.
+   * @param {int} radius - the radius of the outermost circle
+   */
+  constructor(radius) {
+    this.radius = radius;
+  }
+
+  show(origin) {
+    /**
+     * Display the grid at the specified origin .
+     * @param {p5.Vector} origin - the origin of the concentric circles
+     */
+    let tickStep = 50;
+    let n = 2 * this.radius / tickStep;
+    for (var i = 0; i <= n; i++) {
+      if (i * tickStep % 100 == 0) {
+        stroke(255, 50);
+        strokeWeight(1);
+        noFill();
+        ellipse(origin.x, origin.y, i * tickStep);
+        noStroke();
+        fill(255, 150);
+        rect(origin.x + i * tickStep - this.radius, origin.y, 1, 3);
+        rect(origin.x, origin.y + i * tickStep - this.radius, 3, 1);
+      }
+      else {
+        rect(origin.x + i * tickStep - this.radius, origin.y, 1, 10);
+        rect(origin.x, origin.y + i * tickStep - this.radius, 10, 1);
+      }
+    }
   }
 }
 
