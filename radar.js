@@ -106,6 +106,9 @@ class SuspiciousObject {
    * @param {float} angle - the radar beam's current angle 
    * @param {int} size - the size of the shape (default: 10px)
    */
+
+  #shape;
+
   constructor(maxDist, angle, size = 10) {
     angleMode(DEGREES);
     var r = random(0.1 * maxDist, 0.9 * maxDist);
@@ -117,34 +120,50 @@ class SuspiciousObject {
     this.color = getRandomColor();
     this.visible = false;
 
-    var shapes = ["rectangle", "circle"]
-    this.shape = random(shapes);
+    var availShapes = ["rectangle", "circle"]
+    this.#shape = random(availShapes);
   }
 
   draw() {
-    angleMode(DEGREES);
-    push();
+    this.blink();
+
+    if (this.visible) {
+      this.show();
+    }
+  }
+
+  blink(freq = 50) {
+    /** Toggles visibility at the specified frequency. */
+    if (frameCount % freq == 0) {
+      this.visible = !this.visible;
+    }
+  }
+
+  show() {
+    /** Makes object appear on the radar. */
     stroke(this.color);
     strokeWeight(2);
     noFill();
     this.#drawShape();
-    pop();
   }
 
   #drawShape() {
-    if (this.shape == "rectangle") {
+    /** Factory method for drawing a random shape from options. */
+    if (this.#shape == "rectangle") {
       this.#rectShape();
     }
-    else if (this.shape == "circle") {
+    else if (this.#shape == "circle") {
       this.#circleShape();
     }
   }
 
   #rectShape() {
+    /** Draws a rectangle. */
     rect(this.pos.x, this.pos.y, this.w, this.w);
   }
 
   #circleShape() {
+    /** Draws a circle. */
     ellipse(this.pos.x, this.pos.y, this.w, this.w);
   }
 }
