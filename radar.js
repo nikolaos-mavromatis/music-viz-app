@@ -27,6 +27,7 @@ class Radar {
     this.beam = new Beam(this.radius);
     this.objects = [new SuspiciousObject(this.radius, this.beam.angle, 10)];
 
+    this.jitter = new Jitter();
   }
 
   draw() {
@@ -42,14 +43,19 @@ class Radar {
       this.objects[i].draw();
     }
 
-    if (frameCount % 40 == 0) { // condition for generating new objects
-      this.objects.push(new SuspiciousObject(this.radius, this.beam.angle, 10));
-    }
+    // if (frameCount % 40 == 0) { // condition for generating new objects
+    //   this.objects.push(new SuspiciousObject(this.radius, this.beam.angle, 10));
+    // }
 
     // draw beam
     this.beam.draw();
-    ;
+
     pop();
+
+    if (frameCount % 40 == 0) { // condition for generating new objects
+      // this.jitter.static();
+      this.jitter.draw();
+    }
   }
 
   scan() {
@@ -151,7 +157,6 @@ class SuspiciousObject {
   constructor(maxDist, angle, size = 10) {
     var r = random(0.1 * maxDist, 0.9 * maxDist);
     this.angle = angle;
-    // this.angle = random() * TWO_PI;
 
     this.pos = polarToCart(r, angle);
     this.w = size;
@@ -241,3 +246,56 @@ class SuspiciousObject {
     text("x", this.pos.x, this.pos.y);
   }
 }
+
+class Jitter {
+  constructor() {
+    this.startFrame = frameCount;
+    this.lifetime = 500;
+  }
+
+  draw() {
+    if ((frameCount - this.startFrame) < this.lifetime) {
+      this.glitch();
+    }
+  }
+
+  glitch() {
+    // loadPixels();
+
+    // for (var y = 0; y < height; y++) {
+    //   for (var x = 0; x < width; x++) {
+    //     if (noise(xoff) > 0.8) {
+    //       var index = [x + y * width] * 18;
+    //       var r = noise(xoff) * 180
+    //       pixels[index] = 0;
+    //       pixels[index + 1] = r;
+    //       pixels[index + 2] = 0;
+    //       pixels[index + 3] = random(50, 255);
+    //     }
+
+    //   }
+    //   xoff += 20;
+    // }
+
+    // updatePixels();
+
+    for (var i = 0; i < 25; i++) {
+      var x = floor(map(random(), 0, 1, 0, width + 1));
+      stroke('green');
+      line(x, 0, x, height);
+    }
+  }
+
+  static() {
+    stroke(255);
+    strokeWeight(2);
+    noFill();
+    for (var i = 0; i < 500; i++) {
+      for (var j = 0; j < 500; j++) {
+        var p = p5.Vector().random2D();
+        point(p.x * width, p.y * height);
+      }
+    }
+  }
+}
+
