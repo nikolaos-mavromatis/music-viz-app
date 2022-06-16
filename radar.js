@@ -12,6 +12,9 @@ function polarToCart(radius, theta) {
 }
 
 class Radar {
+  /**
+   * Creates a radar that is responsive to elements of the sound.
+   */
   constructor() {
     angleMode(DEGREES);
     this.name = 'radar';
@@ -60,6 +63,13 @@ class Radar {
     ;
     pop();
   }
+
+  scan() {
+    /**
+     * Scans the area covered by the radar for objects.
+     */
+    // placeholder
+  }
 }
 
 class Beam {
@@ -72,6 +82,7 @@ class Beam {
     this.length = length;
 
     this.angle = 0;
+    this.angVel = 0.11;
     this.startPos = polarToCart(20, this.angle);
     this.endPos = polarToCart(this.length, this.angle);
   }
@@ -79,8 +90,23 @@ class Beam {
   draw() {
     angleMode(DEGREES);
     this.rotate();
+    this.show();
+  }
 
-    // draw beam
+  rotate() {
+    /**
+     * Rotates the radar beam by the beam's angular velocity.
+     */
+    this.angle = (this.angle + degrees(this.angVel));
+    // update start and end line points
+    this.startPos = p5.Vector.fromAngle(this.angle, 20);
+    this.endPos = p5.Vector.fromAngle(this.angle, this.length);
+  }
+
+  show() {
+    /**
+     * Makes the radar beam appear.
+     */
     stroke('green');
     strokeWeight(3);
     noFill();
@@ -88,14 +114,6 @@ class Beam {
       this.startPos.x, this.startPos.y,
       this.endPos.x, this.endPos.y
     );
-
-  }
-
-  rotate(step = 0.11) {
-    this.angle = (this.angle + degrees(step));
-    // update start and end line points
-    this.startPos = p5.Vector.fromAngle(this.angle, 20);
-    this.endPos = p5.Vector.fromAngle(this.angle, this.length);
   }
 }
 
@@ -118,7 +136,7 @@ class SuspiciousObject {
     this.w = size;
 
     this.color = getRandomColor();
-    this.visible = false;
+    this.visible = true;
 
     var availShapes = ["rectangle", "circle"]
     this.#shape = random(availShapes);
@@ -133,14 +151,18 @@ class SuspiciousObject {
   }
 
   blink(freq = 50) {
-    /** Toggles visibility at the specified frequency. */
+    /** 
+     * Toggles visibility at the specified frequency.
+     */
     if (frameCount % freq == 0) {
       this.visible = !this.visible;
     }
   }
 
   show() {
-    /** Makes object appear on the radar. */
+    /** 
+     * Makes object appear on the radar.
+     */
     stroke(this.color);
     strokeWeight(2);
     noFill();
@@ -148,7 +170,9 @@ class SuspiciousObject {
   }
 
   #drawShape() {
-    /** Factory method for drawing a random shape from options. */
+    /** 
+     * Factory method for drawing a random shape from options.
+     */
     if (this.#shape == "rectangle") {
       this.#rectShape();
     }
@@ -158,12 +182,16 @@ class SuspiciousObject {
   }
 
   #rectShape() {
-    /** Draws a rectangle. */
+    /** 
+     * Draws a rectangle.
+     */
     rect(this.pos.x, this.pos.y, this.w, this.w);
   }
 
   #circleShape() {
-    /** Draws a circle. */
+    /** 
+     * Draws a circle.
+     */
     ellipse(this.pos.x, this.pos.y, this.w, this.w);
   }
 }
