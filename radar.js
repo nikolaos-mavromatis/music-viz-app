@@ -16,7 +16,7 @@ class Radar {
    * Creates a radar that is responsive to elements of the sound.
    */
   constructor() {
-    angleMode(DEGREES);
+    angleMode(RADIANS);
     this.name = 'radar';
 
     this.pos = createVector(width / 2, height / 2);
@@ -26,12 +26,12 @@ class Radar {
     this.grid = new Grid(this.radius);
     this.beam = new Beam(this.radius);
     this.objects = [new SuspiciousObject(this.radius, this.beam.angle, 10)];
+
   }
 
   draw() {
     push();
     rectMode(CENTER);
-    angleMode(DEGREES);
     translate(width / 2, height / 2);
     var origin = createVector(0, 0);
 
@@ -39,8 +39,11 @@ class Radar {
 
     // draw objects
     for (var i = this.objects.length - 1; i >= 0; i--) {
-      // console.log(this.beam.angle - this.objects[i].angle);
       this.objects[i].draw();
+    }
+
+    if (frameCount % 40 == 0) { // condition for generating new objects
+      this.objects.push(new SuspiciousObject(this.radius, this.beam.angle, 10));
     }
 
     // draw beam
@@ -98,17 +101,15 @@ class Beam {
    * @param {int, float} length - the length of the beam
    */
   constructor(length) {
-    angleMode(DEGREES);
     this.length = length;
 
-    this.angle = 0;
-    this.angVel = 0.11;
+    this.angle = - HALF_PI;
+    this.angVel = radians(0.004);
     this.startPos = polarToCart(20, this.angle);
     this.endPos = polarToCart(this.length, this.angle);
   }
 
   draw() {
-    angleMode(DEGREES);
     this.rotate();
     this.show();
   }
@@ -148,9 +149,9 @@ class SuspiciousObject {
   #shape;
 
   constructor(maxDist, angle, size = 10) {
-    angleMode(DEGREES);
     var r = random(0.1 * maxDist, 0.9 * maxDist);
-    this.angle = random(angle, angle + 30) % 360; // take remainder in case 340+50=390* --> 30*
+    this.angle = angle;
+    // this.angle = random() * TWO_PI;
 
     this.pos = polarToCart(r, angle);
     this.w = size;
@@ -158,12 +159,12 @@ class SuspiciousObject {
     this.color = getRandomColor();
     this.visible = true;
 
-    var availShapes = ["rectangle", "circle"]
+    var availShapes = ["rectangle", "circle", "x"]
     this.#shape = random(availShapes);
   }
 
   draw() {
-    this.blink();
+    // this.blink();
 
     if (this.visible) {
       this.show();
@@ -186,10 +187,10 @@ class SuspiciousObject {
     stroke(this.color);
     strokeWeight(2);
     noFill();
-    this.#drawShape();
+    this.#drawShape(this.#shape);
   }
 
-  #drawShape() {
+  #drawShape(s) {
     /** 
      * Factory method for drawing a random shape from options.
      */
@@ -198,6 +199,9 @@ class SuspiciousObject {
     }
     else if (this.#shape == "circle") {
       this.#circleShape();
+    }
+    else if (this.#shape == "x") {
+      this.#xShape();
     }
   }
 
@@ -213,5 +217,11 @@ class SuspiciousObject {
      * Draws a circle.
      */
     ellipse(this.pos.x, this.pos.y, this.w, this.w);
+  }
+
+  #xShape() {
+    noFill();
+    textSize(1.5 * this.w);
+    text("x", this.pos.x, this.pos.y);
   }
 }

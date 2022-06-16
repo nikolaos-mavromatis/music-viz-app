@@ -30,7 +30,6 @@ class Atom {
     spectralCentroid = fourier.getCentroid();
 
     push();
-    angleMode(DEGREES);
     rectMode(CENTER);
     translate(this.origin.x, this.origin.y);
 
@@ -86,13 +85,13 @@ class Atom {
     rotate(imgAngle);
     let imgSize = 70;
     image(img, -imgSize / 2, -imgSize / 2, imgSize, imgSize);
-    imgAngle = (imgAngle - 1) % 359;
+    imgAngle = (imgAngle - radians(0.5)) % (TWO_PI - radians(1));
 
     pop();
   }
 
   blast() {
-    rotate(random(-2, 2));
+    rotate(radians(random(-2, 2)));
     this.particles.push(new Particle(map(random(), 0, 1, 1, 5), this.d));
   }
 }
@@ -100,7 +99,7 @@ class Atom {
 
 class Particle {
   constructor(size, radius) {
-    let angle = random() * 360;
+    let angle = random() * TWO_PI;
 
     this.pos = createVector(cos(angle), sin(angle)).mult(radius);
 
