@@ -1,5 +1,3 @@
-var beamAngle = 0;
-
 function getRandomColor() {
   let r = random(255);
   let g = random(100, 200);
@@ -51,8 +49,9 @@ class Radar {
       }
     }
 
+    // draw objects
     for (var i = this.objects.length - 1; i >= 0; i--) {
-      console.log(this.beam.pos.angleBetween(this.objects[i].pos))
+      // console.log(this.beam.angle - this.objects[i].angle);
       this.objects[i].draw();
     }
 
@@ -66,48 +65,74 @@ class Radar {
 class Beam {
   /**
    * Generates a rotating radar beam.
-   * @param {int, float} r - the length of the beam
+   * @param {int, float} length - the length of the beam
    */
-  constructor(r) {
+  constructor(length) {
     angleMode(DEGREES);
-    this.r = r;
+    this.length = length;
 
-    this.pos = createVector(0, 0);
-    this.angle = 180;
+    this.angle = PI;
+    this.startPos = polarToCart(20, this.angle);
+    this.endPos = polarToCart(this.length, this.angle);
   }
 
   draw() {
     angleMode(DEGREES);
-    rotate(this.angle);
+    // update start and end line points
+    this.startPos = p5.Vector.fromAngle(this.angle, 20);
+    this.endPos = p5.Vector.fromAngle(this.angle, this.length);
+
+    // draw beam
     stroke('green');
     strokeWeight(3);
     noFill();
-    line(this.pos.x, this.pos.y, 0, this.r);
-    this.angle = (this.angle + 1) % 360;
+    line(
+      this.startPos.x, this.startPos.y,
+      this.endPos.x, this.endPos.y
+    );
+    this.angle = (this.angle + degrees(0.11));
   }
 }
 
 class SuspiciousObject {
-  constructor(maxDist, theta, size = 10) {
-    console.log(theta);
+  /**
+   * Makes an object suspiciously appear on the radar's screen. 
+   * @param {int} maxDist - the max distance to randomly choose from
+   * @param {float} angle - the radar beam's current angle 
+   * @param {int} size - the size of the shape (default: 10px)
+   */
+  constructor(maxDist, angle, size = 10) {
+    angleMode(DEGREES);
     var r = random(0.1 * maxDist, 0.9 * maxDist);
-    var angle = random((theta + 30) % 360, (theta + 30 + 45) % 360); // take remainder in case 340+50=390* --> 30*
+    this.angle = random(angle, angle + 30) % 360; // take remainder in case 340+50=390* --> 30*
 
     this.pos = polarToCart(r, angle);
     this.w = size;
 
     this.color = getRandomColor();
     this.visible = false;
+
+    var shapes = ["rectangle", "circle"]
+    this.shape = random(shapes);
   }
 
   draw() {
+    angleMode(DEGREES);
     push();
     stroke(this.color);
     strokeWeight(2);
     noFill();
-    // this.#rectShape();
-    this.#circleShape();
+    this.#drawShape();
     pop();
+  }
+
+  #drawShape() {
+    if (this.shape == "rectangle") {
+      this.#rectShape();
+    }
+    else if (this.shape == "circle") {
+      this.#circleShape();
+    }
   }
 
   #rectShape() {
