@@ -159,7 +159,7 @@ class SuspiciousObject {
     this.color = getRandomColor();
     this.visible = true;
 
-    var availShapes = ["rectangle", "circle", "x"]
+    var availShapes = ["rectangle", "circle", "triangle", "x"]
     this.#shape = random(availShapes);
   }
 
@@ -186,7 +186,7 @@ class SuspiciousObject {
      */
     stroke(this.color);
     strokeWeight(2);
-    noFill();
+    fill(this.color);
     this.#drawShape(this.#shape);
   }
 
@@ -199,6 +199,9 @@ class SuspiciousObject {
     }
     else if (this.#shape == "circle") {
       this.#circleShape();
+    }
+    else if (this.#shape == "triangle") {
+      this.#triShape();
     }
     else if (this.#shape == "x") {
       this.#xShape();
@@ -219,8 +222,21 @@ class SuspiciousObject {
     ellipse(this.pos.x, this.pos.y, this.w, this.w);
   }
 
+  #triShape() {
+    /** 
+     * Draws a triangle.
+     */
+    triangle(
+      this.pos.x - this.w / 2, this.pos.y + this.w / 2,
+      this.pos.x + this.w / 2, this.pos.y + this.w / 2,
+      this.pos.x, this.pos.y - this.w / 2,
+    );
+  }
+
   #xShape() {
-    noFill();
+    /** 
+     * Draws the letter x.
+     */
     textSize(1.5 * this.w);
     text("x", this.pos.x, this.pos.y);
   }
