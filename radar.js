@@ -71,16 +71,14 @@ class Beam {
     angleMode(DEGREES);
     this.length = length;
 
-    this.angle = PI;
+    this.angle = 0;
     this.startPos = polarToCart(20, this.angle);
     this.endPos = polarToCart(this.length, this.angle);
   }
 
   draw() {
     angleMode(DEGREES);
-    // update start and end line points
-    this.startPos = p5.Vector.fromAngle(this.angle, 20);
-    this.endPos = p5.Vector.fromAngle(this.angle, this.length);
+    this.rotate();
 
     // draw beam
     stroke('green');
@@ -90,7 +88,14 @@ class Beam {
       this.startPos.x, this.startPos.y,
       this.endPos.x, this.endPos.y
     );
-    this.angle = (this.angle + degrees(0.11));
+
+  }
+
+  rotate(step = 0.11) {
+    this.angle = (this.angle + degrees(step));
+    // update start and end line points
+    this.startPos = p5.Vector.fromAngle(this.angle, 20);
+    this.endPos = p5.Vector.fromAngle(this.angle, this.length);
   }
 }
 
