@@ -12,7 +12,7 @@ class Atom {
     this.name = "atom";
 
     img = loadImage('assets/atoms-png-transparent-atoms-images-515983.png');
-    imgAngle = 0;
+    imgAngle = radians(0);
     blastRotation = 0;
 
     this.origin = createVector(width / 2, height / 2);
