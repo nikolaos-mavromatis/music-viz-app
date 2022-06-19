@@ -7,9 +7,9 @@ var blastTriggered;
 var blastRotation;
 
 
-class Atom {
+class SpaceOdyssey {
   constructor() {
-    this.name = "atom";
+    this.name = "space odyssey";
 
     img = loadImage('assets/atoms-png-transparent-atoms-images-515983.png');
     imgAngle = radians(0);
@@ -73,8 +73,7 @@ class Atom {
     // bar separator
     stroke(0);
     strokeWeight(1);
-    line(-width / 2, 0, width / 2, 0);
-
+    line(-width / 2, 0, width / 2, 0);// rotate(radians(random(-2, 2)));
     // centerpiece
     let v = map(amp, 0, 255, 0, 80);
     noStroke();
@@ -88,23 +87,28 @@ class Atom {
     imgAngle = (imgAngle - radians(0.5)) % (TWO_PI - radians(1));
 
     pop();
+
   }
 
   blast() {
     rotate(radians(random(-2, 2)));
-    this.particles.push(new Particle(map(random(), 0, 1, 1, 5), this.d));
+    this.particles.push(new Particle(this.r));
   }
 }
 
 
 class Particle {
-  constructor(size, radius) {
+  /**
+   * Generates a moving particle emitted by the centrepiece.
+   * @param {*} distance - the distance from the center of the screen
+   */
+  constructor(distance) {
+
     let angle = random() * TWO_PI;
+    this.pos = createVector(cos(angle), sin(angle)).mult(distance);
 
-    this.pos = createVector(cos(angle), sin(angle)).mult(radius);
-
-    this.size = size;
-    this.vel = createVector(0, 0);
+    this.size = map(random(), 0, 1, 1, 5);
+    this.vel = createVector(0.01, 0.01);
     this.acc = this.pos.copy().mult(random(0.0001, 0.00005));
 
     let r = random(255);
@@ -121,6 +125,7 @@ class Particle {
   }
 
   isOffScreen() {
+    /** A condition to stop drawing the particle. */
     if (dist(this.pos.x, this.pos.y, 0, 0) > 1500) {
       return true;
     }
@@ -129,9 +134,11 @@ class Particle {
   }
 
   update(cond) {
+    /** Updates the position of the particle. */
     this.vel.add(this.acc);
     this.pos = this.pos.add(this.vel);
 
+    // accelerates even more when the condition is met
     if (cond) {
       let n = 4; // accelerate n times
       for (var i = 0; i < 4; i++) {
