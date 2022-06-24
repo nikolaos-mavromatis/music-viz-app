@@ -36,7 +36,7 @@ class JumpButton {
 
     // frame
     noStroke();
-    fill(0);
+    noFill();
     ellipse(this.x, this.y, this.r + this.r / s, this.r + this.r / s);
 
     // arc
